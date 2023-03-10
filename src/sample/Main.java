@@ -1,26 +1,19 @@
 package sample;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");// write your code here
-        String url = "jdbc:mysql://localhost/library";
-        try {
-            Connection conn = DriverManager.getConnection(url, "root", "password");
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM book");
+        BookDAO dao = BookDAO.getInstance();
 
-            while (rs.next()) {
-                int id = rs.getInt(1);
-                String title  = rs.getString(2);
-                System.out.println("ID: "+id+" Title: "+title);
-            }
-            conn.close();
-        } catch (SQLException throwables) {
-            System.out.println("Error while working with database");
-            throwables.printStackTrace();
+        System.out.println("Enter the title or author of the book: ");
+        Scanner entry = new Scanner(System.in);
+        String search = entry.nextLine();
+        for (Book b : dao.searchBook(search)) {
+            System.out.println("ID: "+b.getId()+", Title: "+b.getTitle()+", Author: "+b.getAuthor());
         }
+
     }
 }
